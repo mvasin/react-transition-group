@@ -189,6 +189,24 @@ describe('Transition', () => {
         },
       })
     })
+
+    it('should pass `entering` transition state to addEndListener', done => {
+      function endListener(_, end, status) {
+        expect(status).toEqual(ENTERING)
+        end()
+      }
+
+      expect(wrapper.state('status')).toEqual(EXITED)
+
+      wrapper.setProps({
+        in: true,
+        addEndListener: endListener,
+        onEntered() {
+          expect(wrapper.state('status')).toEqual(ENTERED)
+          done()
+        },
+      })
+    })
   })
 
   describe('exiting', () => {
@@ -245,6 +263,24 @@ describe('Transition', () => {
         onExited() {
           expect(wrapper.state('status')).toEqual(EXITED)
           expect(count).toEqual(2)
+          done()
+        },
+      })
+    })
+
+    it('should pass `exiting` transition state to addEndListener', done => {
+      function endListener(_, end, status) {
+        expect(status).toEqual(EXITING)
+        end()
+      }
+
+      expect(wrapper.state('status')).toEqual(ENTERED)
+
+      wrapper.setProps({
+        in: true,
+        addEndListener: endListener,
+        onEntered() {
+          expect(wrapper.state('status')).toEqual(EXITED)
           done()
         },
       })
