@@ -191,7 +191,7 @@ describe('Transition', () => {
     })
 
     it('should pass `entering` transition state to addEndListener', done => {
-      function endListener(_, end, status) {
+      function enteringEndListener(_, end, status) {
         expect(status).toEqual(ENTERING)
         end()
       }
@@ -200,7 +200,7 @@ describe('Transition', () => {
 
       wrapper.setProps({
         in: true,
-        addEndListener: endListener,
+        addEndListener: enteringEndListener,
         onEntered() {
           expect(wrapper.state('status')).toEqual(ENTERED)
           done()
@@ -269,7 +269,7 @@ describe('Transition', () => {
     })
 
     it('should pass `exiting` transition state to addEndListener', done => {
-      function endListener(_, end, status) {
+      function exitingEndListener(_, end, status) {
         expect(status).toEqual(EXITING)
         end()
       }
@@ -277,9 +277,9 @@ describe('Transition', () => {
       expect(wrapper.state('status')).toEqual(ENTERED)
 
       wrapper.setProps({
-        in: true,
-        addEndListener: endListener,
-        onEntered() {
+        in: false,
+        addEndListener: exitingEndListener,
+        onExited() {
           expect(wrapper.state('status')).toEqual(EXITED)
           done()
         },
