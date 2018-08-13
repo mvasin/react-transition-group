@@ -260,7 +260,7 @@ class Transition extends React.Component {
         this.safeSetState({ status: ENTERED }, () => {
           this.props.onEntered(node, appearing)
         })
-      })
+      }, ENTERING)
     })
   }
 
@@ -284,7 +284,7 @@ class Transition extends React.Component {
         this.safeSetState({ status: EXITED }, () => {
           this.props.onExited(node)
         })
-      })
+      }, EXITING)
     })
   }
 
@@ -322,18 +322,14 @@ class Transition extends React.Component {
     return this.nextCallback
   }
 
-  onTransitionEnd(node, timeout, handler) {
+  onTransitionEnd(node, timeout, handler, status) {
     this.setNextCallback(handler)
 
-    if (node) {
-      if (this.props.addEndListener) {
-        this.props.addEndListener(node, this.nextCallback)
-      }
-      if (timeout != null) {
-        setTimeout(this.nextCallback, timeout)
-      }
-    } else {
-      setTimeout(this.nextCallback, 0)
+    if (this.props.addEndListener) {
+      this.props.addEndListener(node, this.nextCallback, status)
+    }
+    if (timeout != null) {
+      setTimeout(this.nextCallback, timeout)
     }
   }
 
