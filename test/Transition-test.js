@@ -109,7 +109,7 @@ describe('Transition', () => {
 
   it('should fallback to timeouts with addEndListener', done => {
     let calledEnd = false
-    let listener = (node, end) =>
+    let listener = (_node, _status, end) =>
       setTimeout(() => {
         calledEnd = true
         end()
@@ -191,7 +191,7 @@ describe('Transition', () => {
     })
 
     it('should pass `entering` transition state to addEndListener', done => {
-      function enteringEndListener(_, end, status) {
+      function enteringEndListener(_node, status, end) {
         expect(status).toEqual(ENTERING)
         end()
       }
@@ -269,7 +269,7 @@ describe('Transition', () => {
     })
 
     it('should pass `exiting` transition state to addEndListener', done => {
-      function exitingEndListener(_, end, status) {
+      function exitingEndListener(_node, status, end) {
         expect(status).toEqual(EXITING)
         end()
       }
