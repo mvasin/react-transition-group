@@ -90,7 +90,7 @@ describe('Transition', () => {
   })
 
   it('should allow addEndListener instead of timeouts', done => {
-    let listener = sinon.spy((node, end) => setTimeout(end, 0))
+    let listener = sinon.spy((_node, _status, end) => setTimeout(end, 0))
 
     let inst = mount(
       <Transition
