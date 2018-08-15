@@ -325,12 +325,16 @@ class Transition extends React.Component {
   onTransitionEnd(node, timeout, handler, status) {
     this.setNextCallback(handler)
 
-    if (this.props.addEndListener) {
-      this.props.addEndListener(node, status, this.nextCallback)
-    }
-    if (timeout != null) {
-      setTimeout(this.nextCallback, timeout)
-    }
+    // if (node) {
+      if (this.props.addEndListener) {
+        this.props.addEndListener(node, status, this.nextCallback)
+      }
+      if (timeout != null) {
+        setTimeout(this.nextCallback, timeout)
+      }
+    // } else {
+    //   setTimeout(this.nextCallback, 0)
+    // }
   }
 
   render() {
