@@ -133,6 +133,8 @@ describe('Transition', () => {
 
   describe('entering', () => {
     let wrapper
+    let wrapperDOMlessChild
+    const DOMless = () => null
 
     beforeEach(() => {
       wrapper = mount(
@@ -140,24 +142,49 @@ describe('Transition', () => {
           <div />
         </Transition>
       )
+      wrapperDOMlessChild = mount(
+        <Transition timeout={10}><DOMless /></Transition>
+      )
     })
 
     it('should fire callbacks', done => {
-      let onEnter = sinon.spy()
-      let onEntering = sinon.spy()
+      const onEnter = sinon.spy()
+      const onEntering = sinon.spy()
+      const addEndListener = sinon.spy()
 
       expect(wrapper.state('status')).toEqual(EXITED)
 
       wrapper.setProps({
         in: true,
-
         onEnter,
-
         onEntering,
-
+        addEndListener,
         onEntered() {
           expect(onEnter.calledOnce).toEqual(true)
           expect(onEntering.calledOnce).toEqual(true)
+          expect(addEndListener.calledOnce).toEqual(true)
+          expect(onEnter.calledBefore(onEntering)).toEqual(true)
+          done()
+        },
+      })
+    })
+
+    it('should fire callbacks when the child has no DOM element', done => {
+      const onEnter = sinon.spy()
+      const onEntering = sinon.spy()
+      const addEndListener = sinon.spy()
+
+      expect(wrapperDOMlessChild.state('status')).toEqual(EXITED)
+
+      wrapperDOMlessChild.setProps({
+        in: true,
+        onEnter,
+        onEntering,
+        addEndListener,
+        onEntered() {
+          expect(onEnter.calledOnce).toEqual(true)
+          expect(onEntering.calledOnce).toEqual(true)
+          expect(addEndListener.calledOnce).toEqual(true)
           expect(onEnter.calledBefore(onEntering)).toEqual(true)
           done()
         },
@@ -211,6 +238,8 @@ describe('Transition', () => {
 
   describe('exiting', () => {
     let wrapper
+    let wrapperDOMlessChild
+    const DOMless = () => null
 
     beforeEach(() => {
       wrapper = mount(
@@ -218,11 +247,15 @@ describe('Transition', () => {
           <div />
         </Transition>
       )
+      wrapperDOMlessChild = mount(
+        <Transition timeout={10}><DOMless /></Transition>
+      )
     })
 
     it('should fire callbacks', done => {
-      let onExit = sinon.spy()
-      let onExiting = sinon.spy()
+      const onExit = sinon.spy()
+      const onExiting = sinon.spy()
+      const addEndListener = sinon.spy()
 
       expect(wrapper.state('status')).toEqual(ENTERED)
 
@@ -233,9 +266,38 @@ describe('Transition', () => {
 
         onExiting,
 
+        addEndListener,
+
         onExited() {
           expect(onExit.calledOnce).toEqual(true)
           expect(onExiting.calledOnce).toEqual(true)
+          expect(addEndListener.calledOnce).toEqual(true)
+          expect(onExit.calledBefore(onExiting)).toEqual(true)
+          done()
+        },
+      })
+    })
+
+    it('should fire callbacks when the child has no DOM element', done => {
+      const onExit = sinon.spy()
+      const onExiting = sinon.spy()
+      const addEndListener = sinon.spy()
+
+      expect(wrapperDOMlessChild.state('status')).toEqual(ENTERED)
+
+      wrapperDOMlessChild.setProps({
+        in: false,
+
+        onExit,
+
+        onExiting,
+
+        addEndListener,
+
+        onExited() {
+          expect(onExit.calledOnce).toEqual(true)
+          expect(onExiting.calledOnce).toEqual(true)
+          expect(addEndListener.calledOnce).toEqual(true)
           expect(onExit.calledBefore(onExiting)).toEqual(true)
           done()
         },
